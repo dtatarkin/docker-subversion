@@ -83,7 +83,7 @@ EOT
     # gives another flavor in WebSVN for undefined parent directories... 
     # current_desc=${!current_desc:-'Unlabeled repository group'}
 
-    apache_snippet="<Location \"/svn/${key}\">\n  DAV svn\n  DavMinTimeout 300\n  SVNParentPath ${SVN_BASE}/${key}\n  SVNListParentPath on\n  SVNIndexXSLT /repos/.svnindex.xsl\n  AuthzSVNAccessFile ${SVN_BASE}/${key}/.svn.access\n</Location>\n"
+    apache_snippet="<Location \"/svn/${key}\">\n  DAV svn\n  SVNAutoversioning on\n  ModMimeUsePathInfo on\n  DavMinTimeout 300\n  SVNParentPath ${SVN_BASE}/${key}\n  SVNListParentPath on\n  SVNIndexXSLT /repos/.svnindex.xsl\n  AuthzSVNAccessFile ${SVN_BASE}/${key}/.svn.access\n</Location>\n"
     sed -i -e "s#// additional paths...#\$config->parentPath('${SVN_BASE}/${key}', '${!current_desc}');\n&#g" /var/www/html/include/config.php
     sed -i -e "s#^\# additional repo groups...#${apache_snippet}&#g" /etc/apache2/conf.d/svn.conf
   done
