@@ -20,11 +20,11 @@ RUN set -x && \
         libtool \
         openldap-dev \
         tar" && \
-    apk add --update ${BUILD_DEPS} cyrus-sasl libldap && \
-    curl -fL ftp://ftp.cyrusimap.org/cyrus-sasl/cyrus-sasl-${CYRUS_SASL_VERSION}.tar.gz -o /tmp/cyrus-sasl.tgz && \
-    curl -fL http://git.alpinelinux.org/cgit/aports/plain/main/cyrus-sasl/cyrus-sasl-2.1.25-avoid_pic_overwrite.patch?h=3.2-stable -o /tmp/cyrus-sasl-2.1.25-avoid_pic_overwrite.patch && \
-    curl -fL http://git.alpinelinux.org/cgit/aports/plain/main/cyrus-sasl/cyrus-sasl-2.1.26-size_t.patch?h=3.2-stable -o /tmp/cyrus-sasl-2.1.26-size_t.patch && \
-    curl -fL http://git.alpinelinux.org/cgit/aports/plain/main/cyrus-sasl/CVE-2013-4122.patch?h=3.2-stable -o /tmp/CVE-2013-4122.patch && \
+    apk add --update ${BUILD_DEPS} cyrus-sasl libldap
+COPY cyrus-sasl-2.1.26.tar.gz /tmp/cyrus-sasl.tgz
+RUN curl -fL https://git.alpinelinux.org/aports/plain/main/cyrus-sasl/cyrus-sasl-2.1.25-avoid_pic_overwrite.patch?h=3.7-stable -o /tmp/cyrus-sasl-2.1.25-avoid_pic_overwrite.patch && \
+    curl -fL https://git.alpinelinux.org/aports/plain/main/cyrus-sasl/cyrus-sasl-2.1.26-size_t.patch?h=3.7-stable -o /tmp/cyrus-sasl-2.1.26-size_t.patch && \
+    curl -fL https://git.alpinelinux.org/aports/plain/main/cyrus-sasl/CVE-2013-4122.patch?h=3.7-stable -o /tmp/CVE-2013-4122.patch && \
     tar -xzf /tmp/cyrus-sasl.tgz --strip=1 -C /tmp/cyrus-sasl && \
     cd /tmp/cyrus-sasl && \
     patch -p1 -i /tmp/cyrus-sasl-2.1.25-avoid_pic_overwrite.patch || true && \
@@ -70,7 +70,9 @@ RUN apk add --no-cache apache2 apache2-webdav apache2-ldap apache2-utils && \
 # Install WebSVN
 #
 ENV WEBSVN_VERSION=2.3.3
-RUN svn --username guest --password "" export http://websvn.tigris.org/svn/websvn/tags/${WEBSVN_VERSION} /var/www/html/ && \
+RUN curl -fL https://github.com/websvnphp/websvn/archive/refs/tags/${WEBSVN_VERSION}.tar.gz -o /tmp/${WEBSVN_VERSION}.tar.gz
+RUN mkdir -p /var/www/html && \
+    tar -xzf /tmp/${WEBSVN_VERSION}.tar.gz --strip=1 -C /var/www/html/ && \
     chown -R apache:apache /var/www/html/cache && \
     chmod -R 0700 /var/www/html/cache
 
