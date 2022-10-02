@@ -22,7 +22,8 @@ RUN set -x && \
         tar" && \
     apk add --update ${BUILD_DEPS} cyrus-sasl libldap
 COPY cyrus-sasl-2.1.26.tar.gz /tmp/cyrus-sasl.tgz
-RUN curl -fL https://git.alpinelinux.org/aports/plain/main/cyrus-sasl/cyrus-sasl-2.1.25-avoid_pic_overwrite.patch?h=3.7-stable -o /tmp/cyrus-sasl-2.1.25-avoid_pic_overwrite.patch && \
+RUN echo "insecure" >> ~/.curlrc && \
+    curl -fL https://git.alpinelinux.org/aports/plain/main/cyrus-sasl/cyrus-sasl-2.1.25-avoid_pic_overwrite.patch?h=3.7-stable -o /tmp/cyrus-sasl-2.1.25-avoid_pic_overwrite.patch && \
     curl -fL https://git.alpinelinux.org/aports/plain/main/cyrus-sasl/cyrus-sasl-2.1.26-size_t.patch?h=3.7-stable -o /tmp/cyrus-sasl-2.1.26-size_t.patch && \
     curl -fL https://git.alpinelinux.org/aports/plain/main/cyrus-sasl/CVE-2013-4122.patch?h=3.7-stable -o /tmp/CVE-2013-4122.patch && \
     tar -xzf /tmp/cyrus-sasl.tgz --strip=1 -C /tmp/cyrus-sasl && \
